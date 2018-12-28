@@ -86,7 +86,7 @@ func (p *Pom) Parse(data []byte) error {
 type Props interface {
 	Get(spec.Parameter) string
 	Set(string, interface{})
-	Security(string) bool
+	Security(*spec.Operation) bool
 }
 
 type ErrType string
@@ -125,7 +125,7 @@ func (p *Pom) Action(id string, props Props) (Result, bool) {
 			ErrType: ErrType_Action,
 		}, false
 	}
-	if !props.Security(action.ID) {
+	if !props.Security(action) {
 		return Result{
 			Name:    id,
 			ErrType: ErrType_Permission,
