@@ -68,15 +68,15 @@ func (p *Pom) Parse(data []byte) error {
 
 	for k, v := range swagger.Paths.Paths {
 		if v.Get != nil {
-			logrus.Debugln("Pom Parse:Get:", v.Get.ID)
+			logrus.Debugln("Pom Parse:Get:", k)
 			p.actions["GET "+k] = v.Get
 		}
 		if v.Post != nil {
-			logrus.Debugln("Pom Parse:Post:", v.Post.ID)
+			logrus.Debugln("Pom Parse:Post:", k)
 			p.actions["POST "+k] = v.Post
 		}
 		if v.Delete != nil {
-			logrus.Debugln("Pom Parse:Delete:", v.Delete.ID)
+			logrus.Debugln("Pom Parse:Delete:", k)
 			p.actions["DELETE "+k] = v.Delete
 		}
 	}
