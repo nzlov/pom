@@ -8,22 +8,29 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-var def = New()
+var def *Pom
+
+func Default() *Pom {
+	if def == nil {
+		def = New()
+	}
+	return def
+}
 
 // 验证成功返回时Result.Value赋值正确的数据类型
 type Validate func(spec.Parameter, string) (Result, bool)
 
 func RegisterValidate(name string, f Validate) {
-	def.RegisterValidate(name, f)
+	Default().RegisterValidate(name, f)
 }
 func RegisterModelValidate(name string, f Validate) {
-	def.RegisterModelValidate(name, f)
+	Default().RegisterModelValidate(name, f)
 }
 func Action(id string, props Props) (Result, bool) {
-	return def.Action(id, props)
+	return Default().Action(id, props)
 }
 func Parse(data []byte) error {
-	return def.Parse(data)
+	return Default().Parse(data)
 }
 
 type Pom struct {
@@ -32,7 +39,7 @@ type Pom struct {
 	customValidate      map[string]Validate
 	customModelValidate map[string]Validate
 
-	kF func(string)string
+	kF func(string) string
 }
 
 func New() *Pom {
@@ -51,7 +58,7 @@ func NewWithData(data []byte) (*Pom, error) {
 	}
 	return p, nil
 }
-func (p *Pom)SetKeyFunc(f func(string)string){
+func (p *Pom) SetKeyFunc(f func(string) string) {
 	p.kF = f
 }
 
