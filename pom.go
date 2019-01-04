@@ -31,6 +31,8 @@ type Pom struct {
 	security            spec.SecurityDefinitions
 	customValidate      map[string]Validate
 	customModelValidate map[string]Validate
+
+	kF func(string)string
 }
 
 func New() *Pom {
@@ -48,6 +50,9 @@ func NewWithData(data []byte) (*Pom, error) {
 		return nil, err
 	}
 	return p, nil
+}
+func (p *Pom)SetKeyFunc(f func(string)string){
+	p.kF = f
 }
 
 func (p *Pom) RegisterValidate(name string, f Validate) {
@@ -67,6 +72,7 @@ func (p *Pom) Parse(data []byte) error {
 	p.security = swagger.SecurityDefinitions
 
 	for k, v := range swagger.Paths.Paths {
+		k = p.kF(k)
 		if v.Get != nil {
 			logrus.Debugln("Pom Parse:Get:", k)
 			p.actions["GET "+k] = v.Get
