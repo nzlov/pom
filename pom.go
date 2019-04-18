@@ -26,8 +26,8 @@ func RegisterValidate(name string, f Validate) {
 func RegisterModelValidate(name string, f Validate) {
 	Default().RegisterModelValidate(name, f)
 }
-func Action(id string, props Props) (Result, bool) {
-	return Default().Action(id, props)
+func Action(id string, props Props, es ...interface{}) (Result, bool) {
+	return Default().Action(id, props, es...)
 }
 func Parse(data []byte) error {
 	return Default().Parse(data)
