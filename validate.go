@@ -1,13 +1,14 @@
 package pom
 
 import (
+	"context"
 	"regexp"
 	"strconv"
 
 	"github.com/go-openapi/spec"
 )
 
-func StringValidate(p spec.Parameter, v string) (Result, bool) {
+func StringValidate(ctx context.Context, p spec.Parameter, v string) (Result, bool) {
 	r := []rune(v)
 	l := int64(len(r))
 	if p.MinLength != nil {
@@ -29,7 +30,7 @@ func StringValidate(p spec.Parameter, v string) (Result, bool) {
 		Value: v,
 	}, true
 }
-func IntegerValidate(p spec.Parameter, v string) (Result, bool) {
+func IntegerValidate(ctx context.Context, p spec.Parameter, v string) (Result, bool) {
 
 	f, err := strconv.ParseInt(v, 10, 64)
 	if err != nil {
@@ -56,7 +57,7 @@ func IntegerValidate(p spec.Parameter, v string) (Result, bool) {
 		Value: f,
 	}, true
 }
-func NumberValidate(p spec.Parameter, v string) (Result, bool) {
+func NumberValidate(ctx context.Context, p spec.Parameter, v string) (Result, bool) {
 
 	f, err := strconv.ParseFloat(v, 64)
 	if err != nil {
@@ -83,7 +84,7 @@ func NumberValidate(p spec.Parameter, v string) (Result, bool) {
 		Value: f,
 	}, true
 }
-func BooleanValidate(p spec.Parameter, v string) (Result, bool) {
+func BooleanValidate(ctx context.Context, p spec.Parameter, v string) (Result, bool) {
 	b, err := strconv.ParseBool(v)
 	if err != nil {
 		return Result{
@@ -95,10 +96,10 @@ func BooleanValidate(p spec.Parameter, v string) (Result, bool) {
 	}, true
 
 }
-func MultiValidate(p spec.Parameter, v string, validate ...Validate) (Result, bool) {
+func MultiValidate(ctx context.Context, p spec.Parameter, v string, validate ...Validate) (Result, bool) {
 	var rvi interface{}
 	for _, vi := range validate {
-		r, ok := vi(p, v)
+		r, ok := vi(ctx, p, v)
 		if !ok {
 			return r, false
 		}
@@ -111,10 +112,10 @@ func MultiValidate(p spec.Parameter, v string, validate ...Validate) (Result, bo
 	}, true
 }
 
-var mobileRegexp = regexp.MustCompile("^((0\\d{2,3}-\\d{7,8})|(1[3|4|5|6|7|8|9][0-9]\\d{8}))$")
+var MobileRegexp = regexp.MustCompile("^((0\\d{2,3}-\\d{7,8})|(1[3|4|5|6|7|8|9][0-9]\\d{8}))$")
 
-func MobileValidate(p spec.Parameter, v string) (Result, bool) {
-	i := mobileRegexp.FindString(v)
+func MobileValidate(ctx context.Context, p spec.Parameter, v string) (Result, bool) {
+	i := MobileRegexp.FindString(v)
 	ok := i != ""
 	if !ok {
 		return Result{
@@ -126,10 +127,10 @@ func MobileValidate(p spec.Parameter, v string) (Result, bool) {
 	}, true
 }
 
-var mailRegexp = regexp.MustCompile("^[a-z0-9]+([._\\-]*[a-z0-9])*@([a-z0-9]+[-a-z0-9]*[a-z0-9]+.){1,63}[a-z0-9]+$")
+var MailRegexp = regexp.MustCompile("^[a-z0-9]+([._\\-]*[a-z0-9])*@([a-z0-9]+[-a-z0-9]*[a-z0-9]+.){1,63}[a-z0-9]+$")
 
-func MailValidate(p spec.Parameter, v string) (Result, bool) {
-	i := mailRegexp.FindString(v)
+func MailValidate(ctx context.Context, p spec.Parameter, v string) (Result, bool) {
+	i := MailRegexp.FindString(v)
 	ok := i != ""
 	if !ok {
 		return Result{
@@ -141,10 +142,10 @@ func MailValidate(p spec.Parameter, v string) (Result, bool) {
 	}, true
 }
 
-var idCardRegexp = regexp.MustCompile("(^\\d{15}$)|(^\\d{18}$)|(^\\d{17}(\\d|X|x)$)")
+var IDCardRegexp = regexp.MustCompile("(^\\d{15}$)|(^\\d{18}$)|(^\\d{17}(\\d|X|x)$)")
 
-func IDCardValidate(p spec.Parameter, v string) (Result, bool) {
-	i := idCardRegexp.FindString(v)
+func IDCardValidate(ctx context.Context, p spec.Parameter, v string) (Result, bool) {
+	i := IDCardRegexp.FindString(v)
 	ok := i != ""
 	if !ok {
 		return Result{

@@ -1,6 +1,7 @@
 package pom // import "github.com/nzlov/pom"
 
 import (
+	"context"
 	"fmt"
 	"time"
 
@@ -18,7 +19,7 @@ func Default() *Pom {
 }
 
 // 验证成功返回时Result.Value赋值正确的数据类型
-type Validate func(spec.Parameter, string) (Result, bool)
+type Validate func(context.Context, spec.Parameter, string) (Result, bool)
 
 func RegisterValidate(name string, f Validate) {
 	Default().RegisterValidate(name, f)
@@ -26,8 +27,8 @@ func RegisterValidate(name string, f Validate) {
 func RegisterModelValidate(name string, f Validate) {
 	Default().RegisterModelValidate(name, f)
 }
-func Action(id string, props Props) (Result, bool) {
-	return Default().Action(id, props)
+func Action(ctx context.Context, id string, props Props) (Result, bool) {
+	return Default().Action(ctx, id, props)
 }
 func Parse(data []byte) error {
 	return Default().Parse(data)
@@ -126,7 +127,7 @@ type Result struct {
 }
 
 // Action 验证id对应的Props是否通过，如果通过则通过Props.Set设置属性到Props上，并返回true
-func (p *Pom) Action(id string, props Props) (Result, bool) {
+func (p *Pom) Action(ctx context.Context, id string, props Props) (Result, bool) {
 	now := time.Now()
 	defer func() {
 		logrus.Debugln("Pom Action:", id, time.Since(now))
@@ -203,7 +204,7 @@ func (p *Pom) Action(id string, props Props) (Result, bool) {
 			}
 		}
 
-		r, ok := validate(v, pv)
+		r, ok := validate(ctx, v, pv)
 		if !ok {
 			r.Name = v.Name
 			r.MinLength = v.MinLength
