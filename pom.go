@@ -112,6 +112,10 @@ const (
 	ErrType_Type               = "type error"
 	ErrType_Required           = "required"
 	ErrType_Range              = "range error"
+
+	ErrType_Mobile = "mobile"
+	ErrType_IDCard = "idcard"
+	ErrType_Mail   = "mail"
 )
 
 type Result struct {

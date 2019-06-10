@@ -119,7 +119,7 @@ func MobileValidate(ctx context.Context, p spec.Parameter, v string) (Result, bo
 	ok := i != ""
 	if !ok {
 		return Result{
-			ErrType: ErrType_Format,
+			ErrType: ErrType_Mobile,
 		}, false
 	}
 	return Result{
@@ -134,7 +134,7 @@ func MailValidate(ctx context.Context, p spec.Parameter, v string) (Result, bool
 	ok := i != ""
 	if !ok {
 		return Result{
-			ErrType: ErrType_Format,
+			ErrType: ErrType_Mail,
 		}, false
 	}
 	return Result{
@@ -149,7 +149,7 @@ func IDCardValidate(ctx context.Context, p spec.Parameter, v string) (Result, bo
 	ok := i != ""
 	if !ok {
 		return Result{
-			ErrType: ErrType_Format,
+			ErrType: ErrType_IDCard,
 		}, false
 	}
 	return Result{
